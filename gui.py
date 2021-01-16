@@ -1,4 +1,5 @@
 import tkinter as tk
+import webbrowser
 
 from tkinter import ttk
 from ttkthemes import ThemedTk
@@ -28,6 +29,15 @@ class Application(ttk.Frame):
 
         self.log = tk.Text(frame_l, height=8, state=tk.DISABLED, font=('Consolas', 10))
         self.log.pack(fill=tk.X, expand=1, padx=10, pady=10)
+
+        bottom_bar = ttk.Frame(self, borderwidth=1, relief=tk.SUNKEN)
+        bottom_bar.pack(side=tk.BOTTOM, fill=tk.X, expand=1, anchor=tk.S)
+
+        ttk.Label(bottom_bar, text='CIM Conversion Tool v1.0, by @sr_8e. See Details at ').pack(side=tk.LEFT)
+        label_link = ttk.Label(bottom_bar, text='sr8e/cim-ct', foreground='#0000ff')
+        label_link.bind('<Button-1>', lambda e: webbrowser.open_new('https://github.com/sr8e/cim-ct'))
+        label_link.pack(side=tk.LEFT)
+        ttk.Label(bottom_bar, text='.').pack(side=tk.LEFT)
 
     def convert(self, *args):
         self.log.configure(state=tk.NORMAL)
