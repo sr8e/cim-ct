@@ -4,10 +4,21 @@ from pathlib import Path
 from PIL import Image
 
 
-class ConversionError(Exception):
+class BaseError(Exception):
     def __init__(self, message, path):
         self.message = message
         self.path = path
+
+    def __str__(self):
+        return f'{self.message} at {self.path}'
+
+
+class ConversionError(BaseError):
+    pass
+
+
+class PathError(BaseError):
+    pass
 
 
 class IncorrectHeaderError(ConversionError):
@@ -18,11 +29,11 @@ class UnsupportedFormatError(ConversionError):
     pass
 
 
-class DoesNotExistError(ConversionError):
+class DoesNotExistError(PathError):
     pass
 
 
-class IncorrectPathError(ConversionError):
+class IncorrectPathError(PathError):
     pass
 
 
