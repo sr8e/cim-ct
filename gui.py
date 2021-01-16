@@ -14,18 +14,18 @@ class Application(ttk.Frame):
 
         self.pack(fill=tk.BOTH, expand=1)
         frame = ttk.Frame(self)
-        frame.pack(side=tk.TOP, fill=tk.X, expand=1)
-        self.fileopener = FileOpenFrame(frame)
+        frame.pack(side=tk.TOP, fill=tk.X, expand=1, anchor=tk.N)
 
-        self.fileopener.pack(side=tk.TOP, fill=tk.X, expand=1, padx=30)
+        self.fileopener = FileOpenFrame(frame)
+        self.fileopener.pack(side=tk.TOP, fill=tk.X, expand=1, padx=30, anchor=tk.N)
 
         frame_b = ttk.Frame(frame)
-        frame_b.pack(side=tk.TOP, fill=tk.X, expand=1, padx=30)
+        frame_b.pack(side=tk.TOP, fill=tk.X, expand=1, padx=30, anchor=tk.N)
 
         ttk.Button(frame_b, text='変換', command=self.convert).pack(side=tk.RIGHT)
 
         frame_l = ttk.LabelFrame(self, text='コンソール', borderwidth=1, relief=tk.SOLID)
-        frame_l.pack(side=tk.BOTTOM, fill=tk.X, expand=1, padx=30, pady=20)
+        frame_l.pack(side=tk.TOP, fill=tk.X, expand=1, padx=30, pady=20, anchor=tk.N)
 
         self.log = tk.Text(frame_l, height=8, state=tk.DISABLED, font=('Consolas', 10))
         self.log.pack(fill=tk.X, expand=1, padx=10, pady=10)
