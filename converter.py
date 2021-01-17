@@ -39,8 +39,8 @@ class IncorrectPathError(PathError):
 
 class CimConverter:
     formats = {
-        3: "RGB",
-        4: "RGBA",
+        3: 'RGB',
+        4: 'RGBA',
     }
 
     pixel_size = {

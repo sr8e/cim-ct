@@ -73,9 +73,9 @@ class Application(ttk.Frame):
         self.log.configure(state=tk.DISABLED)
 
 
-root = ThemedTk(theme="arc")
+root = ThemedTk(theme='arc')
 root.geometry('800x600')
-root.title('cim conversion tool')
+root.title('CIM Conversion Tool')
 # root.iconbitmap(settings.icon)
 
 app = Application(root)
