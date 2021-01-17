@@ -1,7 +1,7 @@
 import zlib
 
 from pathlib import Path
-from PIL import Image
+from PIL import Image, UnidentifiedImageError
 
 
 class BaseError(Exception):
@@ -130,4 +130,27 @@ class CimConverter:
                 yield self.png_to_cim(child, dstpath)
 
     def png_to_cim(self, file, dstpath=None):
-        pass
+        try:
+            im = Image.open(file, mode='r')
+            img_arr = im.tobytes()
+            size = im.size
+            w_b = size[0].to_bytes(4, 'big')
+            h_b = size[1].to_bytes(4, 'big')
+            fmt_b = self.get_fmt_index(im.mode).to_bytes(4, 'big')
+            cim_arr = w_b + h_b + fmt_b + img_arr
+
+            dst = file.with_suffix('.cim')
+            if dstpath is not None:
+                dst = dstpath / dst.name
+
+            with dst.open('wb') as fw:
+                fw.write(zlib.compress(cim_arr))
+
+            return {'status': 'success', 'message': f'Conversion Successfully Finished. {file}'}
+        except UnidentifiedImageError as pe:
+            return {'status': 'error', 'message': str(pe)}
+
+    @classmethod
+    def get_fmt_index(cls, mode):
+        i = list(cls.formats.values()).index(mode)
+        return list(cls.formats.keys())[i]
