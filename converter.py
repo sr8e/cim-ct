@@ -96,9 +96,7 @@ class CimConverter:
                 return self.dir_to_cim(self.srcpath, self.dstpath)
 
     def dir_to_png(self, directory, dstpath=None):
-        for child in directory.iterdir():
-            if child.suffix == '.cim':
-                yield self.cim_to_png(child, dstpath)
+        return (self.cim_to_png(child, dstpath) for child in directory.iterdir() if child.suffix == '.cim')
 
     def cim_to_png(self, file, dstpath=None):
         try:
@@ -131,9 +129,7 @@ class CimConverter:
             return {'status': 'error', 'message': f'{str(ze)} at {file}'}
 
     def dir_to_cim(self, directory, dstpath=None):
-        for child in directory.iterdir():
-            if child.suffix == '.png':
-                yield self.png_to_cim(child, dstpath)
+        return (self.png_to_cim(child, dstpath) for child in directory.iterdir() if child.suffix == '.png')
 
     def png_to_cim(self, file, dstpath=None):
         try:
