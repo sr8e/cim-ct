@@ -95,30 +95,34 @@ class CimConverter:
                 yield self.cim_to_png(child, dstpath)
 
     def cim_to_png(self, file, dstpath=None):
+        try:
+            with file.open('rb') as f:
+                bytes_arr = zlib.decompress(f.read())
 
-        with file.open('rb') as f:
-            bytes_arr = zlib.decompress(f.read())
+            w = int.from_bytes(bytes_arr[:4], 'big')
+            h = int.from_bytes(bytes_arr[4:8], 'big')
+            fmt = int.from_bytes(bytes_arr[8:12], 'big')
 
-        w = int.from_bytes(bytes_arr[:4], 'big')
-        h = int.from_bytes(bytes_arr[4:8], 'big')
-        fmt = int.from_bytes(bytes_arr[8:12], 'big')
+            if w * h * self.pixel_size[fmt] != (body_size := len(bytes_arr) - 12):
+                raise IncorrectHeaderError(f'Incorrect Header: w {w} * h {h} != body size {body_size}', file)
 
-        if w * h * self.pixel_size[fmt] != (body_size := len(bytes_arr) - 12):
-            raise IncorrectHeaderError(f'Incorrect Header: w {w} * h {h} != body size {body_size}', file)
+            if fmt not in self.formats:
+                raise UnsupportedFormatError(f'Unsupported Format: {fmt}', file)
 
-        if fmt not in self.formats:
-            raise UnsupportedFormatError(f'Unsupported Format: {fmt}', file)
+            im = Image.frombytes(self.formats[fmt], (w, h), bytes_arr[12:])
 
-        im = Image.frombytes(self.formats[fmt], (w, h), bytes_arr[12:])
+            dst = file.with_suffix('.png')
+            if dstpath is not None:
+                dst = dstpath / dst.name
 
-        dst = file.with_suffix('.png')
-        if savepath is not None:
-            dst = savepath / dst.name
+            with dst.open('wb') as fw:
+                im.save(fw, format='png')
 
-        with dst.open("wb") as fw:
-            im.save(fw, format="png")
-
-        return f'Conversion Successfully Finished. {file}'
+            return {'status': 'success', 'message': f'Conversion Successfully Finished. {file}'}
+        except ConversionError as ce:
+            return {'status': 'error', 'message': str(ce)}
+        except zlib.error as ze:
+            return {'status': 'error', 'message': f'{str(ze)} at {file}'}
 
     def dir_to_cim(self, directory, dstpath=None):
         for child in directory.iterdir():

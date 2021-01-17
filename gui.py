@@ -5,7 +5,7 @@ from tkinter import ttk
 from ttkthemes import ThemedTk
 
 from fileopen import FileOpenFrame
-from converter import CimConverter, ConversionError
+from converter import CimConverter, PathError
 
 
 class Application(ttk.Frame):
@@ -28,7 +28,9 @@ class Application(ttk.Frame):
         frame_l.pack(side=tk.TOP, fill=tk.X, expand=1, padx=30, pady=20, anchor=tk.N)
 
         self.log = tk.Text(frame_l, height=8, state=tk.DISABLED, font=('Consolas', 10))
-        self.log.pack(fill=tk.X, expand=1, padx=10, pady=10)
+        self.log.tag_config('success', foreground='#000000')
+        self.log.tag_config('error', foreground='#ff0000')
+        self.log.pack(fill=tk.BOTH, expand=1, padx=10, pady=10)
 
         bottom_bar = ttk.Frame(self, borderwidth=1, relief=tk.SUNKEN)
         bottom_bar.pack(side=tk.BOTTOM, fill=tk.X, expand=1, anchor=tk.S)
@@ -60,15 +62,15 @@ class Application(ttk.Frame):
 
             if is_single:
                 res = cc.execute()
-                self.log.insert(tk.END, res + '\n')
+                self.log.insert(tk.END, res['message'] + '\n', res['status'])
             else:
                 for res in cc.execute():
-                    self.log.insert(tk.END, res + '\n')
-        except ConversionError as ce:
-            self.log.insert(tk.END, ce.message + '\n')
+                    self.log.insert(tk.END, res['message'] + '\n', res['status'])
+        except PathError as e:
+            self.log.insert(tk.END, str(e) + '\n', 'error')
 
         self.log.see(tk.END)
-        self.log.configure(state=tk.NORMAL)
+        self.log.configure(state=tk.DISABLED)
 
 
 root = ThemedTk(theme="arc")
