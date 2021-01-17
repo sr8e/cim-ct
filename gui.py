@@ -43,13 +43,20 @@ class Application(ttk.Frame):
         self.log.configure(state=tk.NORMAL)
         is_to_png = self.fileopener.ctype.get() == 0
         is_single = self.fileopener.stype.get() == 0
+        chgdst = self.fileopener.changedst.get() == 1
+
         if is_single:
             src = self.fileopener.srcfilepath.get()
         else:
             src = self.fileopener.srcfolderpath.get()
 
         try:
-            cc = CimConverter(is_to_png, is_single, src)
+            if chgdst:
+                dst = self.fileopener.dstfolderpath.get()
+                mkdir = self.fileopener.allow_mkdir.get() == 1
+                cc = CimConverter(is_to_png, is_single, src, dst, mkdir)
+            else:
+                cc = CimConverter(is_to_png, is_single, src)
 
             if is_single:
                 res = cc.execute()

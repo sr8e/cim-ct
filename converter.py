@@ -48,20 +48,27 @@ class CimConverter:
         4: 4,
     }
 
-    def __init__(self, is_to_png, is_single, source, savepath=None):
+    def __init__(self, is_to_png, is_single, source, savepath=None, mkdir=False):
         srcpath = Path(source)
+        dstpath = Path(savepath) if savepath is not None else None
 
         self.is_to_png = is_to_png
         self.is_single = is_single
         self.srcpath = srcpath
-        self.savepath = savepath
+        self.dstpath = dstpath
 
         # validate
         if not srcpath.exists():
             raise DoesNotExistError('File or Directory Does Not Exist.', srcpath)
 
-        if savepath is not None and not savepath.exists():
-            raise DoesNotExistError(f'Save Directory Does Not Exist: {savepath}', srcpath)
+        if dstpath is not None:
+            if dstpath.exists() and not dstpath.is_dir():
+                raise IncorrectPathError(f'Specified Path Already Exists, and is not Directory: {dstpath}', srcpath)
+            elif not dstpath.exists():
+                if mkdir:
+                    dstpath.mkdir(parents=True, exist_ok=True)
+                else:
+                    raise DoesNotExistError(f'Save Directory Does Not Exist: {dstpath}', srcpath)
 
         if is_single:
             if not srcpath.is_file():
@@ -73,21 +80,21 @@ class CimConverter:
     def execute(self):
         if self.is_to_png:
             if self.is_single:
-                return self.cim_to_png(self.srcpath, self.savepath)
+                return self.cim_to_png(self.srcpath, self.dstpath)
             else:
-                return self.dir_to_png(self.srcpath, self.savepath)
+                return self.dir_to_png(self.srcpath, self.dstpath)
         else:
             if self.is_single:
-                return self.png_to_cim(self.srcpath, self.savepath)
+                return self.png_to_cim(self.srcpath, self.dstpath)
             else:
-                return self.dir_to_cim(self.srcpath, self.savepath)
+                return self.dir_to_cim(self.srcpath, self.dstpath)
 
-    def dir_to_png(self, directory, savepath=None):
+    def dir_to_png(self, directory, dstpath=None):
         for child in directory.iterdir():
             if child.suffix == '.cim':
-                yield self.cim_to_png(child, savepath)
+                yield self.cim_to_png(child, dstpath)
 
-    def cim_to_png(self, file, savepath=None):
+    def cim_to_png(self, file, dstpath=None):
 
         with file.open('rb') as f:
             bytes_arr = zlib.decompress(f.read())
@@ -113,10 +120,10 @@ class CimConverter:
 
         return f'Conversion Successfully Finished. {file}'
 
-    def dir_to_cim(self, directory, savepath=None):
+    def dir_to_cim(self, directory, dstpath=None):
         for child in directory.iterdir():
             if child.suffix == '.png':
-                self.png_to_cim(child, savepath)
+                yield self.png_to_cim(child, dstpath)
 
-    def png_to_cim(self, file, savepath=None):
+    def png_to_cim(self, file, dstpath=None):
         pass

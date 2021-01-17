@@ -43,6 +43,25 @@ class FileOpenFrame(ttk.Frame):
         ttk.Button(frame_in_1, text='開く...', command=self.select_folder).pack(side=tk.LEFT)
         ttk.Button(frame_in_2, text='開く...', command=self.select_file).pack(side=tk.LEFT)
 
+        frame_2 = ttk.LabelFrame(self, text='保存先フォルダ指定', borderwidth=1, relief=tk.SOLID)
+        frame_in_3 = ttk.Frame(frame_2)
+        frame_in_4 = ttk.Frame(frame_2)
+
+        frame_2.pack(side=tk.TOP, fill=tk.X, expand=1, pady=15)
+        frame_in_3.pack(side=tk.TOP, fill=tk.X, expand=1, padx=15, pady=5)
+        frame_in_4.pack(side=tk.TOP, fill=tk.X, expand=1, padx=15, pady=5)
+
+        self.changedst = tk.IntVar()
+        self.dstfolderpath = tk.StringVar()
+        self.allow_mkdir = tk.IntVar()
+
+        ttk.Checkbutton(frame_in_3, text='保存先フォルダを指定する', onvalue=1, offvalue=0, variable=self.changedst).pack(side=tk.LEFT)
+
+        ttk.Entry(frame_in_3, textvariable=self.dstfolderpath).pack(side=tk.LEFT, fill=tk.X, expand=1)
+        ttk.Button(frame_in_3, text='開く...', command=self.select_dstfolder).pack(side=tk.LEFT)
+
+        ttk.Checkbutton(frame_in_4, text='フォルダが存在しない場合、新規作成する', onvalue=1, offvalue=0, variable=self.allow_mkdir).pack(side=tk.LEFT)
+
     def select_file(self, *args):
         types = [[('cimファイル', '*.cim')], [('pngファイル', '*.png')]]
         init_dir = os.path.abspath(os.path.dirname(sys.argv[0]))
@@ -51,3 +70,7 @@ class FileOpenFrame(ttk.Frame):
     def select_folder(self, *args):
         init_dir = os.path.abspath(os.path.dirname(sys.argv[0]))
         self.srcfolderpath.set(filedialog.askdirectory(initialdir=init_dir))
+
+    def select_dstfolder(self, *args):
+        init_dir = os.path.abspath(os.path.dirname(sys.argv[0]))
+        self.dstfolderpath.set(filedialog.askdirectory(initialdir=init_dir))
