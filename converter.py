@@ -73,6 +73,12 @@ class CimConverter:
         if is_single:
             if not srcpath.is_file():
                 raise IncorrectPathError('Specified Path is not Correct.', srcpath)
+            if is_to_png:
+                if srcpath.suffix != '.cim':
+                    raise IncorrectPathError('File Extension is not .cim.', srcpath)
+            else:
+                if srcpath.suffix != '.png':
+                    raise IncorrectPathError('File Extension is not .png.', srcpath)
         else:
             if not srcpath.is_dir():
                 raise IncorrectPathError('Specified Path is not Correct.', srcpath)
