@@ -18,8 +18,8 @@ class FileOpenFrame(ttk.Frame):
         radio_c0 = ttk.Radiobutton(frame_0, text='.cim -> .png', value=0, variable=self.ctype)
         radio_c1 = ttk.Radiobutton(frame_0, text='.png -> .cim', value=1, variable=self.ctype)
 
-        radio_c0.pack(side=tk.LEFT, padx=15)
-        radio_c1.pack(side=tk.LEFT)
+        radio_c0.pack(side=tk.LEFT, padx=15, pady=5)
+        radio_c1.pack(side=tk.LEFT, pady=5)
 
         self.stype = tk.IntVar()  # file selection type: 0 for folder, 1 for file(s)
 

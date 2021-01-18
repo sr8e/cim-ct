@@ -2,7 +2,6 @@ import tkinter as tk
 import webbrowser
 
 from tkinter import ttk
-from ttkthemes import ThemedTk
 
 from fileopen import FileOpenFrame
 from converter import CimConverter, PathError
@@ -40,7 +39,7 @@ class Application(ttk.Frame):
         label_link = ttk.Label(bottom_bar, text='sr8e/cim-ct', foreground='#0000ff')
         label_link.bind('<Button-1>', lambda e: webbrowser.open_new('https://github.com/sr8e/cim-ct'))
         label_link.pack(side=tk.LEFT)
-        ttk.Label(bottom_bar, text='.').pack(side=tk.LEFT)
+        ttk.Label(bottom_bar, text='.').pack(side=tk.LEFT, fill=tk.X, expand=1)
 
     def convert(self, *args):
         self.log.configure(state=tk.NORMAL)
@@ -74,7 +73,7 @@ class Application(ttk.Frame):
         self.log.configure(state=tk.DISABLED)
 
 
-root = ThemedTk(theme='arc')
+root = tk.Tk()
 root.geometry('800x600')
 root.title('CIM Conversion Tool')
 root.tk.call('wm', 'iconphoto', root._w, tk.PhotoImage(data=icon_base64))
