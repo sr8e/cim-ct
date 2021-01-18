@@ -6,6 +6,7 @@ from ttkthemes import ThemedTk
 
 from fileopen import FileOpenFrame
 from converter import CimConverter, PathError
+from icon import icon_base64
 
 
 class Application(ttk.Frame):
@@ -76,7 +77,7 @@ class Application(ttk.Frame):
 root = ThemedTk(theme='arc')
 root.geometry('800x600')
 root.title('CIM Conversion Tool')
-# root.iconbitmap(settings.icon)
+root.tk.call('wm', 'iconphoto', root._w, tk.PhotoImage(data=icon_base64))
 
 app = Application(root)
 app.mainloop()
