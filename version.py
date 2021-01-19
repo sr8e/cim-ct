@@ -5,8 +5,8 @@ VERSION_STRING = 'v1.0.0'
 
 
 def compare_version(c, r):
-    c_part = [int(cp) for cp in  c.lstrip('v').split('.')]
-    r_part = [int(rp) for rp in  r.lstrip('v').split('.')]
+    c_part = [int(cp) for cp in c.lstrip('v').split('.')]
+    r_part = [int(rp) for rp in r.lstrip('v').split('.')]
 
     if (cl := len(c_part)) > (rl := len(r_part)):
         r_part += [0] * (cl - rl)
