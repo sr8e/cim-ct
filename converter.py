@@ -74,10 +74,10 @@ class CimConverter:
             if not srcpath.is_file():
                 raise IncorrectPathError('Specified Path is not Correct.', srcpath)
             if is_to_png:
-                if srcpath.suffix != '.cim':
+                if srcpath.suffix.lower() != '.cim':
                     raise IncorrectPathError('File Extension is not .cim.', srcpath)
             else:
-                if srcpath.suffix != '.png':
+                if srcpath.suffix.lower() != '.png':
                     raise IncorrectPathError('File Extension is not .png.', srcpath)
         else:
             if not srcpath.is_dir():
@@ -96,7 +96,7 @@ class CimConverter:
                 return self.dir_to_cim(self.srcpath, self.dstpath)
 
     def dir_to_png(self, directory, dstpath=None):
-        return (self.cim_to_png(child, dstpath) for child in directory.iterdir() if child.suffix == '.cim')
+        return (self.cim_to_png(child, dstpath) for child in directory.iterdir() if child.suffix.lower() == '.cim')
 
     def cim_to_png(self, file, dstpath=None):
         try:
@@ -129,7 +129,7 @@ class CimConverter:
             return {'status': 'error', 'message': f'{str(ze)} at {file}'}
 
     def dir_to_cim(self, directory, dstpath=None):
-        return (self.png_to_cim(child, dstpath) for child in directory.iterdir() if child.suffix == '.png')
+        return (self.png_to_cim(child, dstpath) for child in directory.iterdir() if child.suffix.lower() == '.png')
 
     def png_to_cim(self, file, dstpath=None):
         try:
